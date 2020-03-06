@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { addTodo } from "../actions";
 
-export default class UserInput extends React.Component {
+class UserInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -10,11 +12,6 @@ export default class UserInput extends React.Component {
   }
 
   buttonClicked() {
-    if (this.state.todo === '') {
-      alert('값을 입력하세요.');
-      return;
-    }
-
     this.props.addTodo(this.state.todo);
 
     this.setState({
@@ -44,3 +41,15 @@ export default class UserInput extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+});
+
+const mapDispatchToProps = dispatch => ({
+  addTodo: label => dispatch(addTodo(label))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserInput);

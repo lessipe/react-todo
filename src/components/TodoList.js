@@ -1,20 +1,14 @@
 import React from 'react';
+import {connect} from "react-redux";
+import {toggleTodo} from "../actions";
 
-export default class TodoList extends React.Component {
-  toggleTodo(index) {
-    this.props.toggleTodo(index);
+class TodoList extends React.Component {
+  toggleTodo(id) {
+    this.props.toggleTodo(id);
   }
 
   renderList() {
-    return this.props.todos.filter(todo => {
-      if (this.props.type === 'all') {
-        return true;
-      } else if (this.props.type === 'done') {
-        return todo.done;
-      } else {
-        return ! todo.done;
-      }
-    }).map((todo, index) => {
+    return this.props.todos.map((todo, index) => {
       let className = ['list-group-item', 'text-left'];
 
       if (todo.done) {
@@ -25,7 +19,7 @@ export default class TodoList extends React.Component {
         <button type="button"
           key={`todo-list-${index}-${todo}`}
           className={className.join(' ')}
-          onClick={() => this.toggleTodo(index)}
+          onClick={() => this.toggleTodo(todo.id)}
         >
           { todo.label }
         </button>
@@ -41,3 +35,26 @@ export default class TodoList extends React.Component {
     );
   }
 }
+
+const filteredTodo = (todos, type) => {
+  if (type === 'all') {
+    return todos;
+  } else if (type === 'done') {
+    return todos.filter(todo => todo.done);
+  } else {
+    return todos.filter(todo => ! todo.done);
+  }
+};
+
+const mapStateToProps = state => ({
+  todos: filteredTodo(state.todos.todos, state.todos.type)
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleTodo: id => dispatch(toggleTodo(id))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList);

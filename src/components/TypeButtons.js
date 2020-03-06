@@ -1,6 +1,8 @@
 import React from 'react';
+import {connect} from "react-redux";
+import {changeType, toggleTodo} from "../actions";
 
-export default class TypeButtons extends React.Component {
+class TypeButtons extends React.Component {
   getButtonClass(type) {
     if (this.props.type === type) {
       return 'btn-primary';
@@ -31,3 +33,16 @@ export default class TypeButtons extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  type: state.todos.type
+});
+
+const mapDispatchToProps = dispatch => ({
+  changeType: type => dispatch(changeType(type))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TypeButtons);
